@@ -1,0 +1,39 @@
+# Production-like stack: PostgreSQL + one-shot migration job + app. Not executed in the authoring sandbox (no Docker there).
+# Usage: cp .env.example .env  (fill ADMIN_TOKEN, SECRET_KEY, POSTGRES_PASSWORD)  &&  docker compose up -d --build
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: waterlogging
+      POSTGRES_USER: wps
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wps -d waterlogging"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  migrate:
+    build: .
+    command: ["alembic", "upgrade", "head"]      # controlled migration step; the app never creates tables in production
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://wps:${POSTGRES_PASSWORD}@db:5432/waterlogging
+    depends_on: {db: {condition: service_healthy}}
+  app:
+    build: .
+    command: ["gunicorn", "-c", "gunicorn.conf.py", "wsgi:app"]
+    env_file: .env
+    environment:
+      APP_ENV: production
+      DATABASE_URL: postgresql+psycopg://wps:${POSTGRES_PASSWORD}@db:5432/waterlogging
+      STORAGE_PATH: /data/storage
+    ports: ["8000:8000"]
+    volumes: [appdata:/data]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    stop_grace_period: 30s
+    restart: unless-stopped
+volumes:
+  pgdata:
+  appdata:

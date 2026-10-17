@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 72" role="img" aria-label="Waterlogging Prediction System"><defs><linearGradient id="wpsg" x1="12" y1="6" x2="52" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1d6fe0"/><stop offset="1" stop-color="#19b6d6"/></linearGradient></defs><g transform="translate(2 4)"><path d="M32 4C32 4 11 26.5 11 40.5a21 21 0 0 0 42 0C53 26.5 32 4 32 4z" fill="url(#wpsg)"/>
+<path d="M18 39.5q3.5-3.6 7 0t7 0 7 0 7 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18 47q3.5-3.6 7 0t7 0 7 0 7 0" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<g fill="#19b6d6"><circle cx="52" cy="9" r="2.2"/><circle cx="58" cy="16" r="1.8"/><circle cx="47" cy="15" r="1.6"/></g></g>
+<text x="76" y="33" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif" font-size="24" font-weight="700" fill="#0b2545">Waterlogging</text>
+<text x="76" y="58" font-family="Inter, 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif" font-size="19" font-weight="600" fill="#5a6e8a" letter-spacing=".4">Prediction System</text></svg>

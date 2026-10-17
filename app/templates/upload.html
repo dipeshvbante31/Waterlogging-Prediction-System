@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% from "_icons.html" import icon %}{% block content %}
+<p class="lead">Upload a CSV and see exactly how it validates. Uploads are temporary ({{ settings.upload_retention_hours }} h), limited to {{ settings.max_upload_mb }} MB and {{ "{:,}".format(settings.max_csv_rows) }} rows. Keep your original files.</p>
+<div class="grid cols-main">
+  <section class="card" aria-labelledby="h-up"><h2 id="h-up" style="margin-bottom:var(--s4)">Upload file</h2>
+    <fieldset class="field" style="border:0;padding:0;margin:0 0 var(--s4)"><legend class="small" style="font-weight:600;margin-bottom:var(--s1)">What is this file?</legend>
+      <label class="check"><input type="radio" name="kind" value="train" checked>Training data: labelled, includes <span class="mono">waterlogging_occurred</span></label>
+      <label class="check"><input type="radio" name="kind" value="predict">Prediction data: unlabelled, for batch predictions</label></fieldset>
+    <label class="dropzone" id="drop" for="file" data-max-mb="{{ settings.max_upload_mb }}">{{ icon("upload") }}<strong>Drag and drop a CSV here</strong><span class="muted small">or click to browse · .csv only · max {{ settings.max_upload_mb }} MB</span><span id="picked" class="small"></span><input type="file" id="file" accept=".csv,text/csv"></label>
+    <div id="prog" hidden style="margin-top:var(--s3)"><div class="progress" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100"><div id="bar"></div></div><p class="small muted" id="ptext" style="margin-top:var(--s1)"></p></div>
+    <div class="actions"><button class="btn primary" id="go" type="button" disabled>Upload &amp; validate</button><a class="btn" href="/api/template.csv">Download CSV template</a></div>
+    <div id="result" class="section" aria-live="polite"></div></section>
+  <section class="card" aria-labelledby="h-req"><h2 id="h-req" style="margin-bottom:var(--s3)">Expected columns</h2><div id="schema"><span class="spin"></span>Loading…</div>
+    <p class="hint">Timestamps must be ISO 8601 (YYYY-MM-DD HH:MM). Day-first dates are rejected on purpose to avoid silent day/month swaps.</p></section>
+</div>
+{% endblock %}{% block scripts %}<script src="/static/js/upload.js"></script>{% endblock %}

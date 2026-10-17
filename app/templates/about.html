@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% block content %}
+<section class="card" style="display:flex;flex-wrap:wrap;gap:var(--s5);align-items:center"><img src="/static/img/logo.svg" alt="Waterlogging Prediction System logo" width="300" height="52" class="logo-light"><img src="/static/img/logo-on-dark.svg" alt="" aria-hidden="true" width="300" height="52" class="logo-dark"><div style="flex:1;min-width:260px"><p class="lead" style="margin:0">A configurable platform for training, validating and applying urban waterlogging classifiers, starting with {{ city.name }}.</p></div></section>
+<div class="grid cols-2 section">
+<section class="card" aria-labelledby="a-over"><h2 id="a-over" style="margin-bottom:var(--s3)">Project overview</h2>
+  <p>Upload a labelled history of waterlogging events, validate it, train and compare scikit-learn classifiers, then apply a <em>validated</em> model to single locations or CSV batches. Live Open-Meteo weather supplies rainfall and elevation inputs, always with its source and kind shown.</p>
+  <p class="muted small" style="margin:0">Initial region: Mumbai Metropolitan Region, Maharashtra. Other cities are added through configuration and compatible CSV uploads.</p></section>
+<section class="card" aria-labelledby="a-prob"><h2 id="a-prob" style="margin-bottom:var(--s3)">Problem statement</h2>
+  <p style="margin:0">Street-level waterlogging depends on rainfall intensity and accumulation, ground elevation and slope, drainage capacity, tides and local conditions. Rainfall alone does not determine whether water accumulates, so rainfall is treated as one input and verified event labels are required to learn the rest.</p></section>
+</div>
+<section class="card section" aria-labelledby="a-flow"><h2 id="a-flow" style="margin-bottom:var(--s3)">Workflow</h2><ol class="pill-steps"><li>Upload CSV</li><li>Explore &amp; validate</li><li>Train &amp; evaluate</li><li>Activate a validated model</li><li>Predict (single / batch)</li><li>History &amp; export</li></ol></section>
+<div class="grid cols-2 section">
+<section class="card" aria-labelledby="a-arch"><h2 id="a-arch" style="margin-bottom:var(--s3)">System architecture</h2>
+  <dl class="kv"><dt>Web / API</dt><dd>FastAPI (Python), Jinja2 pages, vanilla JavaScript</dd><dt>Services</dt><dd>Validation, features, training, prediction, explainability, weather (independent of ML)</dd><dt>ML</dt><dd>scikit-learn pipelines, pandas, NumPy, joblib</dd><dt>Database</dt><dd>SQLAlchemy + Alembic; SQLite locally, PostgreSQL in production</dd><dt>Artifacts</dt><dd>Storage interface (local volume today); models are hash-checked on load</dd><dt>Weather</dt><dd>Open-Meteo Forecast, Historical, Elevation and Geocoding APIs, called from the server only</dd></dl></section>
+<section class="card" aria-labelledby="a-ml"><h2 id="a-ml" style="margin-bottom:var(--s3)">Machine-learning methodology</h2>
+  <p>Logistic Regression (baseline), Random Forest and HistGradientBoosting are trained on chronological or location-grouped splits with preprocessing fitted on training data only. Candidates are compared on validation PR-AUC against a prevalence baseline, probabilities are sigmoid-calibrated on validation data, and the test split is used once.</p>
+  <p class="muted small" style="margin:0"><strong>Activation gates:</strong> verified-label attestation and provenance, time/space-aware split, enough distinct locations, test PR-AUC above prevalence by a margin, sufficient positives per split. Only models passing every gate can be activated.</p></section>
+</div>
+<div class="grid cols-2 section">
+<section class="card" aria-labelledby="a-data"><h2 id="a-data" style="margin-bottom:var(--s3)">Data sources &amp; attribution</h2>
+  <ul class="stack" style="margin:0;padding-left:1.2rem"><li><a href="https://open-meteo.com/">Open-Meteo</a>: current conditions, precipitation (model analysis, reanalysis, forecast), elevation, geocoding. Not station observations; check current terms and attribution before production use.</li>
+  <li>IMD / India-WRIS rainfall and incident labels: candidate sources, <strong>not yet verified or used</strong>. See <code>docs/DATA_SOURCES.md</code>.</li></ul></section>
+<section class="card" aria-labelledby="a-lim"><h2 id="a-lim" style="margin-bottom:var(--s3)">Responsible use &amp; limitations</h2>
+  <ul class="stack" style="margin:0;padding-left:1.2rem"><li>No verified labelled waterlogging dataset and no validated trained model are bundled. Predictions stay unavailable until you supply data and a model passes validation.</li><li>Weather values do not prove street-level waterlogging.</li><li>A model applies only to its training period and area; out-of-region points are flagged.</li><li>“Validated” means it passed the gates on the supplied data; it is not a safety guarantee.</li></ul></section>
+</div>
+<div class="grid cols-2 section">
+<section class="card" aria-labelledby="a-tech"><h2 id="a-tech" style="margin-bottom:var(--s3)">Technology stack</h2>
+  <ul class="pill-list"><li class="badge">Python 3.12</li><li class="badge">FastAPI</li><li class="badge">scikit-learn</li><li class="badge">pandas / NumPy</li><li class="badge">SQLAlchemy</li><li class="badge">Alembic</li><li class="badge">PostgreSQL</li><li class="badge">SQLite (dev)</li><li class="badge">Jinja2</li><li class="badge">Plotly.js</li><li class="badge">Docker</li><li class="badge">Gunicorn + Uvicorn</li></ul></section>
+<section class="card" aria-labelledby="a-dev"><h2 id="a-dev" style="margin-bottom:var(--s3)">Developer &amp; academic information</h2>
+  <dl class="kv"><dt>Developer</dt><dd>Dipesh Vishnu Bante</dd><dt>Institution</dt><dd class="muted">[to be added]</dd><dt>Department</dt><dd class="muted">[to be added]</dd><dt>Guide</dt><dd class="muted">[to be added]</dd><dt>Academic year</dt><dd class="muted">[to be added]</dd></dl></section>
+</div>
+<section class="card section" aria-labelledby="a-ver"><h2 id="a-ver" style="margin-bottom:var(--s3)">Testing &amp; deployment status</h2><div id="verification"><span class="spin"></span>Loading…</div></section>
+{% endblock %}{% block scripts %}<script src="/static/js/about.js"></script>{% endblock %}

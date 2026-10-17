@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% block content %}
+<p class="lead">Single locations and CSV batches share the same validation and prediction service. Results are model estimates, not a guarantee that a street will flood.</p>
+<section class="card" style="margin-bottom:var(--s4)" aria-labelledby="h-contract"><div class="card-head"><h2 id="h-contract">What the active model needs</h2></div><div id="contract"><span class="spin"></span>Loading…</div></section>
+<div id="pred-root">
+<div id="single" role="tabpanel" aria-label="Single prediction">
+  <div id="single-gate"></div>
+  <div class="grid cols-2">
+    <section class="card"><h2 style="margin-bottom:var(--s4)">1 · Location &amp; time</h2>
+      <div class="form-row"><div class="field"><label for="q">Search for a place</label><input id="q" placeholder="e.g. Andheri" autocomplete="off"></div><div class="field" style="flex:0"><button class="btn" id="find" type="button">Search</button></div></div><div id="hits"></div>
+      <div class="form-row"><div class="field"><label for="lat">Latitude</label><input id="lat" inputmode="decimal" value="{{ city.center_lat }}"></div><div class="field"><label for="lon">Longitude</label><input id="lon" inputmode="decimal" value="{{ city.center_lon }}"></div></div>
+      <div id="loc" class="section"></div>
+      <div class="field"><label for="ts">Observation time</label><input id="ts" placeholder="2026-07-01 10:00"><p class="hint">ISO format; no offset means {{ city.timezone }}. Leave blank for the current hour.</p></div>
+      <div id="coverage"></div><div class="actions"><button class="btn primary" id="fetch" type="button">Retrieve features</button></div></section>
+    <section class="card"><h2 style="margin-bottom:var(--s4)">2 · Features &amp; prediction</h2><div id="features"><div class="empty"><strong>No features yet</strong>Retrieve features to see each value and where it came from.</div></div>
+      <div class="actions"><label class="check"><input type="checkbox" id="save">Save to history</label></div>
+      <div class="actions"><button class="btn primary" id="predict" type="button" disabled>Predict</button></div><div id="result" class="section" aria-live="polite"></div><div id="expl" class="chart"></div></section>
+  </div></div>
+<div id="batch" role="tabpanel" aria-label="Batch prediction">
+  <div id="batch-gate"></div>
+  <div class="grid cols-2">
+    <section class="card"><h2 style="margin-bottom:var(--s4)">1 · Choose an uploaded file</h2><div class="field"><label for="bds">Prediction dataset</label><select id="bds"><option value="">Loading…</option></select>
+      <p class="hint">Files are added on <a href="/upload">Upload CSV</a> (choose “Prediction data”).</p></div><div id="bval"></div></section>
+    <section class="card"><h2 style="margin-bottom:var(--s4)">2 · Run &amp; download</h2><label class="check"><input type="checkbox" id="bhist">Save results to history</label>
+      <div class="actions"><button class="btn primary" id="brun" type="button" disabled>Run batch prediction</button></div><div id="bjob" class="section" aria-live="polite"></div></section>
+  </div>
+  <section class="card section"><h2 style="margin-bottom:var(--s4)">Results</h2><div class="form-row"><div class="field"><label for="f-risk">Risk level</label><select id="f-risk"><option value="">All</option><option>Low</option><option>Medium</option><option>High</option><option>pending_validation</option></select></div>
+    <div class="field"><label for="f-class">Predicted class</label><select id="f-class"><option value="">All</option><option value="1">1</option><option value="0">0</option></select></div></div>
+    <div id="bres"><div class="empty">No results yet.</div></div><div class="actions"><button class="btn sm" id="bprev" type="button" disabled>Previous</button><button class="btn sm" id="bnext" type="button" disabled>Next</button><span id="bpg" class="muted small"></span></div></section>
+</div></div>
+{% endblock %}{% block scripts_vendor %}<script src="/static/vendor/plotly.min.js"></script>{% endblock %}{% block scripts %}<script id="cfg" type="application/json">{"lat": {{ city.center_lat }}, "lon": {{ city.center_lon }}, "region": {{ city.name|tojson }}, "bbox": [{{ city.min_lat }}, {{ city.min_lon }}, {{ city.max_lat }}, {{ city.max_lon }}]}</script><script src="/static/js/location.js"></script><script src="/static/js/predictions.js"></script>{% endblock %}

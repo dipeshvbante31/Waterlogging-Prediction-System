@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<p class="lead">What a fitted model relies on. These are associations learned from the training data, not proof of cause.</p>
+<div class="field" style="max-width:440px"><label for="ver">Model version</label><select id="ver"></select></div>
+<div id="root" aria-live="polite"><span class="spin"></span>Loading…</div>
+{% endblock %}{% block scripts_vendor %}<script src="/static/vendor/plotly.min.js"></script>{% endblock %}{% block scripts %}<script src="/static/js/explain.js"></script>{% endblock %}

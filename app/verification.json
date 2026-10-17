@@ -1,0 +1,12 @@
+{"recorded": true, "date": "2026-10-17", "checks": [
+ {"check": "Automated test suite (pytest)", "status": "PASS", "detail": "176 passed, 0 failed, 4 skipped (the skips are the opt-in live-weather tests). Baseline before this redesign: 136 passed. Synthetic fixtures only."},
+ {"check": "Browser-style UI test (jsdom): real pages, scripts, server and database", "status": "PASS", "detail": "110 checks (103 main flow + 7 provider-outage). Plotly stubbed, upload progress events simulated; weather served by a LOCAL MOCK provider."},
+ {"check": "Real Chrome rendering: 9 pages x 3 widths x 2 themes", "status": "PASS", "detail": "54 renders: no horizontal overflow, no clipped tables, no console errors; mobile menu and Escape key verified."},
+ {"check": "Text contrast (WCAG AA 4.5:1) of theme colours, light and dark", "status": "PASS", "detail": "Computed from the stylesheet tokens in an automated test."},
+ {"check": "Production start (Gunicorn): config validation, migrations 0001-0002, serve, graceful stop", "status": "PASS", "detail": "Verified with SQLite and ALLOW_SQLITE_IN_PRODUCTION; unsafe config refuses to start."},
+ {"check": "Alembic migrations on SQLite (upgrade/check/downgrade) and PostgreSQL DDL generation", "status": "PASS", "detail": "PostgreSQL DDL checked offline only."},
+ {"check": "Live Open-Meteo requests", "status": "NOT TESTED", "detail": "The provider is unreachable from the build environment. Run: RUN_LIVE_WEATHER=1 python -m pytest tests/integration -m live"},
+ {"check": "PostgreSQL server (migrations executed, persistence)", "status": "NOT TESTED", "detail": "No PostgreSQL server available. Restart persistence verified on SQLite."},
+ {"check": "Docker image build / docker-compose / Render deployment", "status": "NOT TESTED", "detail": "Docker unavailable; files are written but unbuilt and undeployed."},
+ {"check": "Other browsers/devices (Firefox, Safari, real phones) and the supplied dashboard screenshot", "status": "NOT TESTED", "detail": "Only Chrome 131 was available; the reference screenshot was not received, so the design follows the written specification."},
+ {"check": "Verified labelled waterlogging dataset / validated production model", "status": "BLOCKED", "detail": "None exists in this repository; predictions remain unavailable until one is supplied."}]}

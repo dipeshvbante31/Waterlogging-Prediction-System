@@ -1,0 +1,11 @@
+[project]
+name = "waterlogging-prediction-system"
+version = "0.1.0"
+description = "Configurable urban waterlogging risk modelling platform (FastAPI + scikit-learn)"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+markers = ["live: calls the real Open-Meteo service; opt-in with RUN_LIVE_WEATHER=1"]

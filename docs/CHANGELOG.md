@@ -1,0 +1,18 @@
+# Changelog — production refactor (2026-10-15)
+## Breaking / notable API and schema changes
+* **Removed**: `GET /api/map/points`, the `/map` page. Retired page URLs `/data`, `/train`, `/performance`, `/predict`, `/batch` redirect (308) to `/data-models` or `/predictions`.
+* **Models**: only `validated` models can be activated; `POST /api/models/{v}/activate` returns 409 otherwise. Registry auto-activates only the first validated model; later validated models need explicit activation. Experimental models are saved for inspection but never serve predictions (`/api/predict` → 409 `no_model`).
+* **Training** now requires non-empty `label_provenance` (422 otherwise).
+* **Weather**: `GET /api/weather` now returns structured `windows` (value_mm/status/kind/hours_present), `current`, `elevation` {value_m,status,error}, `coverage`, plus `last_updated_utc`/`stale`/`data_age_s`. Old keys `rainfall_windows_mm`, `elevation_m`, `in_configured_region` are kept. `GET /api/geocode` results are country-filtered, deduplicated, validated and carry `coverage_eligible`.
+* **New**: `POST /api/features` (per-feature source/kind/status; never zero-fills), `GET /api/datasets`, `GET /api/datasets/{id}/preview`, `GET /api/models/{v}`, `GET /api/activity`, `GET /api/history/export.csv`, `GET /api/verification`. `POST /api/predict` accepts `feature_sources`; saved history stores them under `inputs._sources` and returns `coverage`.
+* **Config**: new `CITY_BBOX`, `CORS_ALLOWED_ORIGINS`, `OPEN_METEO_API_KEY`, `WEATHER_ARCHIVE_URL`, `WEATHER_GEOCODING_COUNTRY`, `ALLOW_SQLITE_IN_PRODUCTION`; production startup validation. Default Mumbai coverage widened from a city-only box to the Metropolitan Region.
+* No database schema changes (Alembic revision 0001 unchanged).
+
+# Changelog — UI redesign, branding, map removal (2026-10-16)
+* **Removed all map features**: Leaflet (vendored library, shared location picker), OpenStreetMap tile requests and attribution, the CSP tile allowance, `CityProfile.default_zoom` (legacy key in city JSON is ignored), map containers/CSS. Locations are now text (place search + validated coordinates). Model-coverage checking (a bounding box) stays: it is validation, not a map.
+* **New navigation**: Dashboard, Data Explorer (`/data-explorer`), Upload CSV (`/upload`), Predictions, Live Weather, Model Training (`/model-training`), Explainability, History (+ `/history/{id}`), About. `/data`, `/data-models` → `/data-explorer`; `/train`, `/performance` → `/model-training`; `/predict`, `/batch` → `/predictions` (308).
+* **Live Weather**: `GET /api/weather?fresh=true` (default) bypasses the cache so each click is a new provider request; identical concurrent requests share one call; failures may fall back to stale cache, flagged with its timestamp. `current` now carries temperature, feels-like, humidity, wind speed/direction, precipitation, rain, WMO condition + icon key, observation time; missing/invalid/unit-mismatched fields are `unavailable` (never 0).
+* **Prediction inputs**: `slope_deg` is DEM-derived (labelled, overridable); `drainage_capacity` stays user-supplied; `POST /api/train` accepts `exclude_features`; `GET /api/contract` is the single feature contract for single and batch prediction; rejection reasons are now plain-language.
+* **New endpoints**: `GET /api/dashboard`, `GET /api/datasets/{id}/explore`, `GET /api/history/{id}`, `GET /api/datasets?kind=&status=`; `/api/history` gains `q` and `source` filters; `POST /api/predict` accepts `location_name` and returns `history_id`.
+* **Schema**: Alembic revision `0002` adds nullable `predictions.location_name`.
+* **Robustness**: SQLite parent directory is created automatically; all text file I/O is explicit UTF-8 (Windows); env-file encoding set.

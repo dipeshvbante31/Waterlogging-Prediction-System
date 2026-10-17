@@ -1,0 +1,28 @@
+# Render blueprint. Free/low-cost tiers: the free web service filesystem and free Postgres are NOT durable
+# long-term; see docs/DEPLOYMENT.md. Not deployment-tested.
+services:
+  - type: web
+    name: waterlogging-prediction
+    runtime: docker
+    plan: starter            # a persistent disk requires a paid instance type
+    healthCheckPath: /health
+    disk:
+      name: wps-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: STORAGE_PATH
+        value: /data/storage
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wps-db
+          property: connectionString
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: "1"
+databases:
+  - name: wps-db
+    plan: free               # Render free Postgres expires; upgrade or point DATABASE_URL elsewhere

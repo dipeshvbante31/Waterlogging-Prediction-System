@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<div style="display:flex;flex-wrap:wrap;gap:var(--s3);justify-content:space-between;align-items:flex-start"><p class="lead" style="margin:0">Saved predictions (only when you opt in; pruned after {{ settings.history_retention_days }} days) and background jobs.</p><a class="btn" href="/api/history/export.csv">Export predictions CSV</a></div>
+<div id="hist-root" style="margin-top:var(--s4)">
+  <div id="p-panel"><div class="card"><div class="form-row"><div class="field"><label for="hq">Search location</label><input id="hq" placeholder="Place name" autocomplete="off"></div>
+    <div class="field"><label for="risk">Risk level</label><select id="risk"><option value="">All</option><option>Low</option><option>Medium</option><option>High</option><option>pending_validation</option></select></div>
+    <div class="field"><label for="hsrc">Source</label><select id="hsrc"><option value="">All</option><option value="single">Single</option><option value="batch">Batch</option><option value="weather">Live weather</option></select></div></div>
+    <div id="p-body" aria-live="polite"></div><div class="actions"><button class="btn sm" id="p-prev" type="button">Previous</button><button class="btn sm" id="p-next" type="button">Next</button><span id="p-pg" class="muted small"></span></div></div>
+    <div class="card section"><h2 style="margin-bottom:var(--s3)">Delete history</h2><div id="tok"></div><div class="actions"><button class="btn danger" id="clear" type="button">Delete all prediction history</button></div><div id="clear-msg"></div></div></div>
+  <div id="j-panel"><div class="card"><div class="form-row"><div class="field"><label for="jtype">Job type</label><select id="jtype"><option value="">All</option><option value="train">Training</option><option value="batch_predict">Batch prediction</option></select></div></div>
+    <div id="j-body" aria-live="polite"></div><div class="actions"><button class="btn sm" id="j-prev" type="button">Previous</button><button class="btn sm" id="j-next" type="button">Next</button><span id="j-pg" class="muted small"></span></div></div></div>
+</div>
+{% endblock %}{% block scripts %}<script src="/static/js/history.js"></script>{% endblock %}

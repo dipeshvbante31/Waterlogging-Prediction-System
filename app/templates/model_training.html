@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block content %}
+<p class="lead">Training, evaluation and the model registry. Training runs as a background job; a model is only <em>validated</em> if every gate passes on a held-out split, and only validated models can be activated. Uploading data is on <a href="/upload">Upload CSV</a>.</p>
+<section class="card" aria-labelledby="h-train"><h2 id="h-train" style="margin-bottom:var(--s3)">Train a model</h2><div id="train-gate"></div>
+  <div class="grid cols-2"><div>
+    <div class="field"><label for="dataset">Training dataset</label><select id="dataset"><option value="">Loading…</option></select><p class="hint">Validated training uploads only. Inspect one in the <a href="/data-explorer">Data Explorer</a>.</p></div>
+    <div class="field"><label for="split">Evaluation split</label><select id="split"><option value="chronological">Chronological: train on the past, test on the future (recommended)</option><option value="spatial_group">Location-grouped: test on unseen ~1 km cells</option><option value="random_stratified">Random (optimistic; can never be validated)</option></select></div>
+    <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="small" style="font-weight:600;margin-bottom:var(--s1)">Label origin</legend>
+      <label class="check"><input type="radio" name="origin" value="verified" checked>Verified observations (1 = verified occurrence, 0 = verified absence)</label>
+      <label class="check"><input type="radio" name="origin" value="synthetic">Synthetic or unverified (the model can never be validated)</label></fieldset></div>
+  <div><div class="field"><label for="prov">Label provenance (required)</label><textarea id="prov" maxlength="1000" placeholder="Who recorded the labels, for what period and area, and how absence was verified."></textarea></div>
+    <fieldset class="field" style="border:0;padding:0;margin:0"><legend class="small" style="font-weight:600;margin-bottom:var(--s1)">Leave out features the app cannot supply at prediction time</legend>
+      <label class="check"><input type="checkbox" class="excl" value="drainage_capacity">drainage_capacity: no public data source exists</label>
+      <label class="check"><input type="checkbox" class="excl" value="slope_deg">slope_deg: only a coarse DEM-derived estimate is available</label>
+      <p class="hint">Excluded features are not used by the model, so single predictions will not ask for them.</p></fieldset>
+    <div id="tok"></div><div class="actions"><button class="btn primary" id="train" type="button" disabled>Start training</button></div></div></div>
+  <div id="train-out" class="section" aria-live="polite"></div></section>
+<section class="card section" aria-labelledby="h-reg"><h2 id="h-reg" style="margin-bottom:var(--s3)">Model registry</h2><div id="registry"><span class="spin"></span>Loading…</div><div id="model-detail" class="section"></div></section>
+{% endblock %}{% block scripts_vendor %}<script src="/static/vendor/plotly.min.js"></script>{% endblock %}{% block scripts %}<script src="/static/js/model_training.js"></script>{% endblock %}

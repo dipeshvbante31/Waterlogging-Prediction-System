@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% from "_icons.html" import icon %}{% block content %}
+<p class="lead">Overview of the Waterlogging Prediction System for {{ city.name }}. Every figure below is computed from stored records; nothing is hardcoded. <span id="updated" class="small"></span></p>
+<div class="grid cols-4" id="stats" aria-live="polite">
+  <section class="card stat"><span class="chip">{{ icon("table") }}</span><div><div class="label">Total records</div><div class="value" id="s-total">…</div><div class="sub" id="s-total-sub">Saved predictions</div></div></section>
+  <section class="card stat"><span class="chip err">{{ icon("alert") }}</span><div><div class="label">High-risk predictions</div><div class="value" id="s-high">…</div><div class="sub" id="s-high-sub"></div></div></section>
+  <section class="card stat"><span class="chip warn">{{ icon("predict") }}</span><div><div class="label">Average probability</div><div class="value" id="s-avg">…</div><div class="sub" id="s-avg-sub"></div></div></section>
+  <section class="card stat"><span class="chip ok">{{ icon("clock") }}</span><div><div class="label">Latest prediction</div><div class="value" id="s-latest" style="font-size:1.15rem">…</div><div class="sub" id="s-latest-sub"></div></div></section>
+</div>
+<div class="grid cols-main section">
+  <section class="card" aria-labelledby="h-recent"><div class="card-head"><h2 id="h-recent">Recent predictions</h2><a class="btn sm" href="/history">View all</a></div><div id="d-recent"><span class="spin"></span>Loading…</div></section>
+  <section class="card" aria-labelledby="h-dist"><div class="card-head"><h2 id="h-dist">Risk distribution</h2></div><div id="d-dist"><span class="spin"></span>Loading…</div></section>
+</div>
+<div class="grid cols-main section">
+  <section class="card" aria-labelledby="h-qa"><div class="card-head"><h2 id="h-qa">Quick actions</h2></div>
+    <div class="grid cols-3">
+      <a class="qa" href="/data-explorer">{{ icon("table") }}Explore data</a><a class="qa" href="/upload">{{ icon("upload") }}Upload CSV</a><a class="qa" href="/predictions">{{ icon("predict") }}Make a prediction</a>
+      <a class="qa" href="/history">{{ icon("clock") }}View history</a><a class="qa" href="/weather">{{ icon("cloud") }}Check live weather</a><a class="qa" href="/model-training">{{ icon("model") }}Train a model</a></div></section>
+  <section class="card" aria-labelledby="h-ins"><div class="card-head"><h2 id="h-ins">Latest insights</h2></div><ul class="insights" id="d-insights"></ul>
+    <h3 class="small muted" style="margin:var(--s4) 0 var(--s2)">System status</h3><div id="d-status"></div></section>
+</div>
+<p class="small muted section" id="defs"></p>
+{% endblock %}{% block scripts_vendor %}<script src="/static/vendor/plotly.min.js"></script>{% endblock %}{% block scripts %}<script src="/static/js/dashboard.js"></script>{% endblock %}

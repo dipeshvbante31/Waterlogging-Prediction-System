@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% from "_icons.html" import icon %}{% block content %}
+<p class="lead">Current conditions from Open-Meteo for the chosen location. Every click on <strong>Get live weather</strong> makes a new request through the server. Values are model analysis, not station observations, and never prove that a street is waterlogged.</p>
+<div class="grid cols-main">
+  <section class="card" aria-labelledby="h-loc"><h2 id="h-loc" style="margin-bottom:var(--s4)">Location</h2>
+    <div class="form-row"><div class="field"><label for="q">Search for a city or place</label><input id="q" placeholder="e.g. Mumbai" autocomplete="off"></div><div class="field" style="flex:0"><button class="btn" id="find" type="button">Search</button></div></div><div id="hits"></div>
+    <div class="form-row"><div class="field"><label for="lat">Latitude</label><input id="lat" inputmode="decimal" value="{{ city.center_lat }}"></div><div class="field"><label for="lon">Longitude</label><input id="lon" inputmode="decimal" value="{{ city.center_lon }}"></div></div>
+    <div id="loc" class="section"></div>
+    <div class="actions"><button class="btn primary" id="get" type="button">{{ icon("refresh") }}Get live weather</button><a class="btn" id="to-pred" href="/predictions">Use in Predictions</a></div></section>
+  <section class="card" aria-labelledby="h-how"><h2 id="h-how" style="margin-bottom:var(--s3)">How to read this</h2><ul class="small muted" style="margin:0;padding-left:1.2rem">
+    <li><strong>Current:</strong> Open-Meteo's latest model analysis for the point. Observation time is the provider's timestamp; retrieval time is when this server asked.</li>
+    <li><strong>Recent / forecast rainfall:</strong> hourly model values, labelled separately. Forecast is never shown as observed.</li>
+    <li><strong>Not reported:</strong> the provider returned nothing for that field. It is never shown as 0.</li>
+    <li><strong>Model coverage</strong> is separate from weather availability.</li></ul></section>
+</div>
+<section class="card section" aria-live="polite" aria-labelledby="h-now"><div class="card-head"><h2 id="h-now">Current weather</h2><span id="status"></span></div><div id="w"><div class="empty"><strong>No weather loaded</strong>Choose a location and click “Get live weather”.</div></div></section>
+<div class="grid cols-2 section"><section class="card"><h2 style="margin-bottom:var(--s3)">Recent rainfall (model analysis)</h2><div id="windows"><div class="empty">Not loaded.</div></div></section>
+<section class="card"><h2 style="margin-bottom:var(--s3)">Forecast, next 24 hours (UTC)</h2><div id="chart" class="chart"><div class="empty">Not loaded.</div></div></section></div>
+{% endblock %}{% block scripts_vendor %}<script src="/static/vendor/plotly.min.js"></script>{% endblock %}
+{% block scripts %}<script id="cfg" type="application/json">{"lat": {{ city.center_lat }}, "lon": {{ city.center_lon }}, "region": {{ city.name|tojson }}, "bbox": [{{ city.min_lat }}, {{ city.min_lon }}, {{ city.max_lat }}, {{ city.max_lon }}]}</script><script src="/static/js/location.js"></script><script src="/static/js/weather.js"></script>{% endblock %}

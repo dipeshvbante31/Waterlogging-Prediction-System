@@ -1,0 +1,44 @@
+{% from "_icons.html" import icon %}<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} · Waterlogging Prediction System</title>
+<meta name="description" content="Urban waterlogging risk modelling platform with validated-model gating and transparent weather provenance.">
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml"><link rel="alternate icon" href="/static/img/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+<script src="/static/js/theme.js"></script>
+<link rel="stylesheet" href="/static/css/app.css">
+{% block head %}{% endblock %}
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Sidebar">
+    <a class="brand" href="/" aria-label="Waterlogging Prediction System, home">{% include "_logo_icon.html" %}<span>Waterlogging<small>Prediction System</small></span></a>
+    <nav class="nav" aria-label="Main">
+      {% set ns = namespace(group=None) %}
+      {% for key, label, href, ico, group in nav %}
+        {% if group != ns.group %}{% if ns.group %}</div>{% endif %}<div class="nav-group"><h2>{{ group }}</h2>{% set ns.group = group %}{% endif %}
+        <a href="{{ href }}" {% if key == active %}aria-current="page"{% endif %}>{{ icon(ico) }}<span>{{ label }}</span></a>
+      {% endfor %}</div>
+    </nav>
+    <div class="side-foot">{{ icon("leaf") }}<strong>Water-wise cities</strong>Better data supports resilient, sustainable urban drainage and flood preparedness.</div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation">{{ icon("menu") }}</button>
+      <h1>{{ title }}</h1><span class="spacer"></span>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark mode"><span id="icon-moon">{{ icon("moon") }}</span><span id="icon-sun" style="display:none">{{ icon("sun") }}</span></button>
+    </header>
+    <main id="content" class="content">
+      <div id="model-banner" aria-live="polite"></div>
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer"><div class="inner"><span>© 2026 Dipesh Vishnu Bante. All rights reserved.</span><span>Model estimates only, not safety guidance.</span></div></footer>
+  </div>
+</div>
+{% block scripts_vendor %}{% endblock %}
+<script src="/static/js/app.js"></script>
+{% block scripts %}{% endblock %}
+</body></html>

@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}
+<p><a href="/history">← Back to History</a></p>
+<div id="detail" data-id="{{ record_id }}" aria-live="polite"><span class="spin"></span>Loading…</div>
+{% endblock %}{% block scripts %}<script src="/static/js/prediction_detail.js"></script>{% endblock %}

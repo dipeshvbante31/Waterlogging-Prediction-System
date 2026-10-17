@@ -1,0 +1,16 @@
+.git
+.env
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+tests
+docs
+storage
+uploads
+results
+data/raw
+data/processed
+*.db
+node_modules
